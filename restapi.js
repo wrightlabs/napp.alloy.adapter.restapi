@@ -228,7 +228,7 @@ function Sync(method, model, opts) {
 			break;
 
 		case 'read':
-			if (model[model.idAttribute]) {
+			if (model.config.URL != null && model[model.idAttribute]) {
 				params.url = params.url + '/' + model[model.idAttribute];
 			}
 
@@ -279,13 +279,15 @@ function Sync(method, model, opts) {
 				Ti.API.error("[REST API] ERROR: MISSING MODEL ID");
 				return;
 			}
-
+			
 			// setup the url & data
-			if (_.indexOf(params.url, "?") == -1) {
-				params.url = params.url + '/' + model[model.idAttribute];
-			} else {
-				var str = params.url.split("?");
-				params.url = str[0] + '/' + model[model.idAttribute] + "?" + str[1];
+			if(model.config.URL != null) {
+				if (_.indexOf(params.url, "?") == -1) {
+					params.url = params.url + '/' + model[model.idAttribute];
+				} else {
+					var str = params.url.split("?");
+					params.url = str[0] + '/' + model[model.idAttribute] + "?" + str[1];
+				}
 			}
 
 			if (params.urlparams) {
@@ -315,7 +317,10 @@ function Sync(method, model, opts) {
 				Ti.API.error("[REST API] ERROR: MISSING MODEL ID");
 				return;
 			}
-			params.url = params.url + '/' + model[model.idAttribute];
+			
+			if(model.config.URL != null) {
+				params.url = params.url + '/' + model[model.idAttribute];
+			}
 
 			logger(DEBUG, "delete options", params);
 
