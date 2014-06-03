@@ -162,7 +162,7 @@ function Sync(method, model, opts) {
 
 	// We need to ensure that we have a base url.
 	if (!params.url) {
-		params.url = (model.config.URL || model.url());
+		params.url = model.config.URL;
 		if (!params.url) {
 			Ti.API.error("[REST API] ERROR: NO BASE URL");
 			return;
@@ -228,7 +228,7 @@ function Sync(method, model, opts) {
 			break;
 
 		case 'read':
-			if (model.config.URL != null && model[model.idAttribute]) {
+			if (model[model.idAttribute]) {
 				params.url = params.url + '/' + model[model.idAttribute];
 			}
 
@@ -281,13 +281,11 @@ function Sync(method, model, opts) {
 			}
 			
 			// setup the url & data
-			if(model.config.URL != null) {
-				if (_.indexOf(params.url, "?") == -1) {
-					params.url = params.url + '/' + model[model.idAttribute];
-				} else {
-					var str = params.url.split("?");
-					params.url = str[0] + '/' + model[model.idAttribute] + "?" + str[1];
-				}
+			if (_.indexOf(params.url, "?") == -1) {
+				params.url = params.url + '/' + model[model.idAttribute];
+			} else {
+				var str = params.url.split("?");
+				params.url = str[0] + '/' + model[model.idAttribute] + "?" + str[1];
 			}
 
 			if (params.urlparams) {
@@ -318,9 +316,7 @@ function Sync(method, model, opts) {
 				return;
 			}
 			
-			if(model.config.URL != null) {
-				params.url = params.url + '/' + model[model.idAttribute];
-			}
+			params.url = params.url + '/' + model[model.idAttribute];
 
 			logger(DEBUG, "delete options", params);
 
